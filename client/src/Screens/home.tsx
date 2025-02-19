@@ -22,6 +22,7 @@ import {
   Send,
   SearchIcon,
 } from "lucide-react-native";
+import Sidebar from "@/Components/Sidebar";
 
 type Message = {
   text: string;
@@ -42,9 +43,12 @@ const videoIcon =
 const exampleMessages: Message[] = [];
 
 const HomeScreen = () => {
-  // Input settings
+  // states
   const [message, setMessage] = useState("");
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false); // sidebar state
+  const [selectedChatId, setSelectedChatId] = useState<string | null>(null); //chatid state
 
+  // Input settings
   const [height, setHeight] = useState(40); // Initial height
   const MAX_LENGTH = 500; // Maximum character limit
   const MIN_HEIGHT = 40; // Minimum height
@@ -59,6 +63,17 @@ const HomeScreen = () => {
 
   const isWeb = Platform.OS === "web";
 
+  // chats example
+  const chats = [
+    { id: "1", title: "Chat with AI - Session 1" },
+    { id: "2", title: "DeepSeek - Session 2" },
+    { id: "3", title: "GPT - Session 3" },
+  ];
+  // chat selection
+  const handleChatSelect = (chatId: string) => {
+    setSelectedChatId(chatId);
+    setIsSidebarVisible(false);
+  };
   // Send message
   const handleSend = async (message: string, isAi: boolean) => {
     // Check if the message is empty
@@ -133,11 +148,12 @@ const HomeScreen = () => {
   };
 
   React.useEffect(() => {
-    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+    const backH = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleBackPress
+    );
 
-    return () => {
-      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
-    };
+    return () => backH.remove();
   }, [backPressed]);
 
   // Processor of changes in the size of the contents
@@ -172,15 +188,15 @@ const HomeScreen = () => {
   return (
     <View className="flex w-full h-full bg-white sm:w-screen sm:h-screen">
       {/* Header */}
-      <View className="px-4 w-full sm:h-[60px] mt-[10px] pt-6 sm:pt-2 pb-4 flex-row items-center justify-between border-b border-gray-100">
+      <View className="px-4 w-full sm:h-[60px] mt-[10px] pt-7 sm:pt-2 pb-4 flex-row items-center justify-between border-b border-gray-100">
         <View className="flex-row items-center gap-4">
-          <TouchableOpacity>
-            <Menu size={24} color="#000" />
+          <TouchableOpacity onPress={() => setIsSidebarVisible(true)}>
+            <Menu size={32} color="#000" />
           </TouchableOpacity>
-          <View className="flex-row ml-[5px] items-center gap-2">
+          <View className="flex-row items-center gap-2">
             <Image
-              className="w-[63px] h-[63px] rounded-full"
-              source={require("../img/Rena/aiavatar.jpg")}
+              className="w-[48px] h-[48px] rounded-full"
+              source={require("../img/ai/aiavatar.jpg")}
               resizeMode="cover"
             />
             <View>
@@ -203,13 +219,13 @@ const HomeScreen = () => {
           <TouchableOpacity>
             <Image
               source={videoIcon}
-              className="w-[24px] ml-[15px] h-[24px] sm:h-[48px] sm:w-[48px]"
+              className="w-[24px] h-[24px] sm:h-[48px] sm:w-[48px]"
             />
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Tips */}
+      {/* MAIN */}
       <View className="flex h-screen w-screen">
         {/* Tips - displayed if there are no messages */}
         {messages.length === 0 && (
@@ -395,6 +411,7 @@ const HomeScreen = () => {
                 setHeight(newHeight);
               }
             }}
+            onKeyPress={handleKeyPress}
             multiline
             maxLength={MAX_LENGTH}
             onContentSizeChange={handleContentSizeChange} // Handles dynamic resizing
@@ -427,7 +444,16 @@ const HomeScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Sidebar */}
+      <Sidebar
+        isVisible={isSidebarVisible}
+        onClose={() => setIsSidebarVisible(false)}
+        chats={chats}
+        onSelectChat={handleChatSelect}
+      />
     </View>
   );
 };
+
 export default HomeScreen;
