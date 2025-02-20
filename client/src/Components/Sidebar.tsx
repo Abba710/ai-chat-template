@@ -1,13 +1,6 @@
-// src/components/Sidebar.tsx
-import React, { useEffect } from "react";
-import { View, Text, TouchableOpacity, FlatList, Animated } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { Animated, View, Text, TouchableOpacity, FlatList } from "react-native";
 import { Menu } from "lucide-react-native";
-import {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-import { transform } from "@babel/core";
 
 interface SidebarProps {
   isVisible: boolean;
@@ -22,29 +15,38 @@ const Sidebar: React.FC<SidebarProps> = ({
   chats,
   onSelectChat,
 }) => {
-  if (!isVisible) return null;
-
-  const offset = useSharedValue<number>(-250); // Initial position
+  const translateX = useRef(new Animated.Value(-255)).current; // Initial position
+  const opacity = useRef(new Animated.Value(0)).current; // Opacity for fade effect
 
   useEffect(() => {
-    if (isVisible) {
-      offset.value = withTiming(0, { duration: 300 }); // Smoothly moves to the right
-    } else {
-      offset.value = withTiming(-250, { duration: 300 }); // Smoothly moves to the left
-    }
+    Animated.parallel([
+      Animated.timing(translateX, {
+        toValue: isVisible ? 0 : -255,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacity, {
+        toValue: isVisible ? 1 : 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
   }, [isVisible]);
-
-  // Create animated styles
-  const animatedStyles = useAnimatedStyle(() => ({
-    transform: [{ translateX: offset.value }], // We apply animation to TranslatEx
-  }));
 
   return (
     <Animated.View
-      className="absolute top-0 left-0 bottom-0 w-64 bg-white shadow-lg z-50"
-      style={animatedStyles} // apply animated styles
+      style={{
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        width: 255,
+        backgroundColor: "white",
+        zIndex: 50,
+        transform: [{ translateX }],
+        opacity,
+      }}
     >
-      {/* sidebar header */}
+      {/* Sidebar header */}
       <View className="px-4 w-full sm:h-[60px] mt-[10px] pt-7 sm:pt-2 pb-4 flex-row items-center justify-between border-b border-gray-100">
         <View className="flex-row items-center gap-4">
           <TouchableOpacity onPress={onClose}>
@@ -53,21 +55,19 @@ const Sidebar: React.FC<SidebarProps> = ({
         </View>
       </View>
 
-      {/* chat list */}
+      {/* Chat list */}
       <FlatList
         data={chats}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => onSelectChat(item.id)}>
-            <Text className="p-4">{item.title}</Text>
+          <TouchableOpacity
+            onPress={() => onSelectChat(item.id)}
+            className="p-4 bg-gray-100 border-b border-gray-300"
+          >
+            <Text className="text-lg text-gray-800">{item.title}</Text>
           </TouchableOpacity>
         )}
       />
-
-      {/* Кнопка закрытия */}
-      <TouchableOpacity className="p-4 bg-gray-100" onPress={onClose}>
-        <Text className="text-center">Close</Text>
-      </TouchableOpacity>
     </Animated.View>
   );
 };

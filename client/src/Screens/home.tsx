@@ -12,7 +12,6 @@ import {
   Platform,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
-  TextInputContentSizeChangeEventData,
 } from "react-native";
 import {
   Menu,
@@ -61,8 +60,6 @@ const HomeScreen = () => {
   const [backPressed, setBackPressed] = useState(false);
   const scrollViewRef = useRef<ScrollView | null>(null);
 
-  const isWeb = Platform.OS === "web";
-
   // chats example
   const chats = [
     { id: "1", title: "Chat with AI - Session 1" },
@@ -75,7 +72,7 @@ const HomeScreen = () => {
     setIsSidebarVisible(false);
   };
   // Send message
-  const handleSend = async (message: string, isAi: boolean) => {
+  const handleSend = async (message: string) => {
     // Check if the message is empty
     if (!message.trim()) {
       return; // Do not send empty messages
@@ -125,7 +122,7 @@ const HomeScreen = () => {
       const webEvent = event as KeyboardEvent;
       if (webEvent.key === "Enter" && !webEvent.shiftKey) {
         webEvent.preventDefault(); // Prevent adding a new line
-        handleSend(message, false); // Send the message when Enter is pressed
+        handleSend(message); // Send the message when Enter is pressed
       }
     }
   };
@@ -190,7 +187,11 @@ const HomeScreen = () => {
       {/* Header */}
       <View className="px-4 w-full sm:h-[60px] mt-[10px] pt-7 sm:pt-2 pb-4 flex-row items-center justify-between border-b border-gray-100">
         <View className="flex-row items-center gap-4">
-          <TouchableOpacity onPress={() => setIsSidebarVisible(true)}>
+          <TouchableOpacity
+            onPress={() => {
+              setIsSidebarVisible(true);
+            }}
+          >
             <Menu size={32} color="#000" />
           </TouchableOpacity>
           <View className="flex-row items-center gap-2">
@@ -246,7 +247,7 @@ const HomeScreen = () => {
                 <View className="gap-2">
                   <TouchableOpacity
                     className="bg-gray-50 p-4 rounded-3xl"
-                    onPress={() => handleSend("Explain Quantum physics", false)}
+                    onPress={() => handleSend("Explain Quantum physics")}
                   >
                     <Text className="text-center text-gray-700">
                       Explain Quantum physics
@@ -255,10 +256,7 @@ const HomeScreen = () => {
                   <TouchableOpacity
                     className="bg-gray-50 p-4 rounded-3xl"
                     onPress={() =>
-                      handleSend(
-                        "What are wormholes explain like i am 5",
-                        false
-                      )
+                      handleSend("What are wormholes explain like i am 5")
                     }
                   >
                     <Text className="text-center text-gray-700">
@@ -280,7 +278,7 @@ const HomeScreen = () => {
                   <TouchableOpacity
                     className="bg-gray-50 p-4 rounded-3xl"
                     onPress={() =>
-                      handleSend("Write a tweet about global warming", false)
+                      handleSend("Write a tweet about global warming")
                     }
                   >
                     <Text className="text-center text-gray-700">
@@ -290,7 +288,7 @@ const HomeScreen = () => {
                   <TouchableOpacity
                     className="bg-gray-50 p-4 rounded-3xl"
                     onPress={() =>
-                      handleSend("Write a poem about flower and love", false)
+                      handleSend("Write a poem about flower and love")
                     }
                   >
                     <Text className="text-center text-gray-700">
@@ -299,9 +297,7 @@ const HomeScreen = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     className="bg-gray-50 p-4 rounded-3xl"
-                    onPress={() =>
-                      handleSend("Write a rap song lyrics about", false)
-                    }
+                    onPress={() => handleSend("Write a rap song lyrics about")}
                   >
                     <Text className="text-center text-gray-700">
                       Write a rap song lyrics about
@@ -322,10 +318,7 @@ const HomeScreen = () => {
                   <TouchableOpacity
                     className="bg-gray-50 p-4 rounded-3xl"
                     onPress={() =>
-                      handleSend(
-                        "How do you say 'how are you' in korean?",
-                        false
-                      )
+                      handleSend("How do you say 'how are you' in korean?")
                     }
                   >
                     <Text className="text-center text-gray-700">
@@ -336,8 +329,7 @@ const HomeScreen = () => {
                     className="bg-gray-50 p-4 rounded-3xl"
                     onPress={() =>
                       handleSend(
-                        "Translate this sentence to spanish: 'I love you'",
-                        false
+                        "Translate this sentence to spanish: 'I love you'"
                       )
                     }
                   >
@@ -437,7 +429,7 @@ const HomeScreen = () => {
 
           {/* Send Button */}
           <TouchableOpacity
-            onPress={() => handleSend(message, false)}
+            onPress={() => handleSend(message)}
             disabled={!message.trim()} // Disable button if the input is empty
           >
             <Send size={25} color={message.trim() ? "#0084ff" : "black"} />
