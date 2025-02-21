@@ -23,6 +23,12 @@ import {
 } from "lucide-react-native";
 import Sidebar from "@/Components/Sidebar";
 
+interface ChatType {
+  id: string;
+  title: string;
+  lastMessage?: string;
+}
+
 type Message = {
   text: string;
   time: Date;
@@ -45,7 +51,8 @@ const HomeScreen = () => {
   // states
   const [message, setMessage] = useState("");
   const [isSidebarVisible, setIsSidebarVisible] = useState(false); // sidebar state
-  const [selectedChatId, setSelectedChatId] = useState<string | null>(null); //chatid state
+  const [chats, setChats] = useState<ChatType[]>([]); // chats list
+  const [selectedChat, setSelectedChat] = useState<ChatType | null>(null); // select chat
 
   // Input settings
   const [height, setHeight] = useState(40); // Initial height
@@ -60,28 +67,17 @@ const HomeScreen = () => {
   const [backPressed, setBackPressed] = useState(false);
   const scrollViewRef = useRef<ScrollView | null>(null);
 
-  // chats example
-  const chats = [
-    { id: "1", title: "Chat with AI - Session 1" },
-    { id: "2", title: "DeepSeek - Session 2" },
-    { id: "3", title: "GPT - Session 3" },
-    { id: "4", title: "Qwen - Session 4" },
-    { id: "5", title: "Grok - Session 5" },
-    { id: "6", title: "Gemini - Session 6" },
-    { id: "7", title: "Claude - Session 7" },
-    { id: "8", title: "Midjourney - Session 8" },
-    { id: "9", title: "Llama - Session 9" },
-  ];
   // chat selection
   const handleChatSelect = (chatId: string) => {
-    setSelectedChatId(chatId);
+    // To do: Write a chat selection function
     setIsSidebarVisible(false);
   };
 
   // create new chat
   const handleCreateNewChat = (chats) => {
-    //To do: create function
+    //To do: Write the function of creating new chats
   };
+
   // Send message
   const handleSend = async (message: string) => {
     // Check if the message is empty
@@ -125,6 +121,7 @@ const HomeScreen = () => {
     }
   };
 
+  // interception of clicks Enter
   const handleKeyPress = (
     event: NativeSyntheticEvent<TextInputKeyPressEventData> | KeyboardEvent
   ) => {
