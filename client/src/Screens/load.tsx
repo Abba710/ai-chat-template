@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, Image, Platform } from "react-native";
+import { View, Image, Platform } from "react-native";
 import { useEffect } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
 
 type LoadScreenNavigationProp = StackNavigationProp<

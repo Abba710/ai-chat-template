@@ -65,11 +65,22 @@ const HomeScreen = () => {
     { id: "1", title: "Chat with AI - Session 1" },
     { id: "2", title: "DeepSeek - Session 2" },
     { id: "3", title: "GPT - Session 3" },
+    { id: "4", title: "Qwen - Session 4" },
+    { id: "5", title: "Grok - Session 5" },
+    { id: "6", title: "Gemini - Session 6" },
+    { id: "7", title: "Claude - Session 7" },
+    { id: "8", title: "Midjourney - Session 8" },
+    { id: "9", title: "Llama - Session 9" },
   ];
   // chat selection
   const handleChatSelect = (chatId: string) => {
     setSelectedChatId(chatId);
     setIsSidebarVisible(false);
+  };
+
+  // create new chat
+  const handleCreateNewChat = (chats) => {
+    //To do: create function
   };
   // Send message
   const handleSend = async (message: string) => {
@@ -442,6 +453,7 @@ const HomeScreen = () => {
         isVisible={isSidebarVisible}
         onClose={() => setIsSidebarVisible(false)}
         chats={chats}
+        onStartNewChat={() => handleCreateNewChat(chats)}
         onSelectChat={handleChatSelect}
       />
     </View>
