@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useRef } from "react";
-import { sendMessageToAI } from "@/services/api";
 import {
   View,
   Text,
@@ -22,18 +21,12 @@ import {
   SearchIcon,
 } from "lucide-react-native";
 import Sidebar from "@/Components/Sidebar";
-
-interface ChatType {
-  id: string;
-  title: string;
-  lastMessage?: string;
-}
-
-type Message = {
-  text: string;
-  time: Date;
-  isAi: boolean;
-};
+import { MessageType } from "@/types/chattypes";
+import {
+  handleChatSelect,
+  handleCreateNewChat,
+  handleSend,
+} from "@/utils/chatHandlers";
 
 const callIcon =
   Platform.OS === "web"
@@ -45,14 +38,22 @@ const videoIcon =
     ? require("../img/Video.svg")
     : require("../img/Video.png");
 
-const exampleMessages: Message[] = [];
+interface ChatInterface {
+  id: string;
+  title: string;
+  lastMessage?: string;
+}
+
+const exampleMessages: MessageType[] = [];
 
 const HomeScreen = () => {
   // states
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(""); // input state
   const [isSidebarVisible, setIsSidebarVisible] = useState(false); // sidebar state
-  const [chats, setChats] = useState<ChatType[]>([]); // chats list
-  const [selectedChat, setSelectedChat] = useState<ChatType | null>(null); // select chat
+  const [chats, setChats] = useState<ChatInterface[]>([]); // chats list
+  const [selectedChat, setSelectedChat] = useState<ChatInterface | null>(null); // select chat
+  const [messages, setMessages] = useState<MessageType[]>(exampleMessages); // messages state
+  const [backPressed, setBackPressed] = useState(false); // Mobile back button state
 
   // Input settings
   const [height, setHeight] = useState(40); // Initial height
@@ -61,65 +62,7 @@ const HomeScreen = () => {
   const MAX_HEIGHT = 200; // Maximum height
   const LINE_HEIGHT = 40; // Approximate height of one line of text
 
-  const [messages, setMessages] = useState<Message[]>(exampleMessages);
-  // Message max length
-
-  const [backPressed, setBackPressed] = useState(false);
   const scrollViewRef = useRef<ScrollView | null>(null);
-
-  // chat selection
-  const handleChatSelect = (chatId: string) => {
-    // To do: Write a chat selection function
-    setIsSidebarVisible(false);
-  };
-
-  // create new chat
-  const handleCreateNewChat = (chats) => {
-    //To do: Write the function of creating new chats
-  };
-
-  // Send message
-  const handleSend = async (message: string) => {
-    // Check if the message is empty
-    if (!message.trim()) {
-      return; // Do not send empty messages
-    }
-
-    console.log("Sent:", message);
-
-    // Add user's message to the chat
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { text: message, time: new Date(), isAi: false }, // User message
-    ]);
-
-    setMessage("");
-    setHeight(40);
-
-    try {
-      // Attempt to get a response from the AI
-      const aiResponse = await sendMessageToAI(message);
-
-      // Add AI's response to the chat
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: aiResponse.response, time: new Date(), isAi: true }, // AI message
-      ]);
-    } catch (error) {
-      // Error handling if something goes wrong
-      console.error("Error getting AI response:", error);
-
-      // Add an error message to the chat
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          text: "Failed to get a response. Please try again.",
-          time: new Date(),
-          isAi: true,
-        }, // System message
-      ]);
-    }
-  };
 
   // interception of clicks Enter
   const handleKeyPress = (
@@ -130,7 +73,7 @@ const HomeScreen = () => {
       const webEvent = event as KeyboardEvent;
       if (webEvent.key === "Enter" && !webEvent.shiftKey) {
         webEvent.preventDefault(); // Prevent adding a new line
-        handleSend(message); // Send the message when Enter is pressed
+        handleSend(message, setMessages, setMessage, setHeight); // Send the message when Enter is pressed
       }
     }
   };
@@ -255,7 +198,14 @@ const HomeScreen = () => {
                 <View className="gap-2">
                   <TouchableOpacity
                     className="bg-gray-50 p-4 rounded-3xl"
-                    onPress={() => handleSend("Explain Quantum physics")}
+                    onPress={() =>
+                      handleSend(
+                        "Explain Quantum physics",
+                        setMessages,
+                        setMessage,
+                        setHeight
+                      )
+                    }
                   >
                     <Text className="text-center text-gray-700">
                       Explain Quantum physics
@@ -264,7 +214,12 @@ const HomeScreen = () => {
                   <TouchableOpacity
                     className="bg-gray-50 p-4 rounded-3xl"
                     onPress={() =>
-                      handleSend("What are wormholes explain like i am 5")
+                      handleSend(
+                        "What are wormholes explain like i am 5",
+                        setMessages,
+                        setMessage,
+                        setHeight
+                      )
                     }
                   >
                     <Text className="text-center text-gray-700">
@@ -286,7 +241,12 @@ const HomeScreen = () => {
                   <TouchableOpacity
                     className="bg-gray-50 p-4 rounded-3xl"
                     onPress={() =>
-                      handleSend("Write a tweet about global warming")
+                      handleSend(
+                        "Write a tweet about global warming",
+                        setMessages,
+                        setMessage,
+                        setHeight
+                      )
                     }
                   >
                     <Text className="text-center text-gray-700">
@@ -296,7 +256,12 @@ const HomeScreen = () => {
                   <TouchableOpacity
                     className="bg-gray-50 p-4 rounded-3xl"
                     onPress={() =>
-                      handleSend("Write a poem about flower and love")
+                      handleSend(
+                        "Write a poem about flower and love",
+                        setMessages,
+                        setMessage,
+                        setHeight
+                      )
                     }
                   >
                     <Text className="text-center text-gray-700">
@@ -305,7 +270,14 @@ const HomeScreen = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     className="bg-gray-50 p-4 rounded-3xl"
-                    onPress={() => handleSend("Write a rap song lyrics about")}
+                    onPress={() =>
+                      handleSend(
+                        "Write a rap song lyrics about",
+                        setMessages,
+                        setMessage,
+                        setHeight
+                      )
+                    }
                   >
                     <Text className="text-center text-gray-700">
                       Write a rap song lyrics about
@@ -326,7 +298,12 @@ const HomeScreen = () => {
                   <TouchableOpacity
                     className="bg-gray-50 p-4 rounded-3xl"
                     onPress={() =>
-                      handleSend("How do you say 'how are you' in korean?")
+                      handleSend(
+                        "How do you say 'how are you' in korean?",
+                        setMessages,
+                        setMessage,
+                        setHeight
+                      )
                     }
                   >
                     <Text className="text-center text-gray-700">
@@ -337,7 +314,10 @@ const HomeScreen = () => {
                     className="bg-gray-50 p-4 rounded-3xl"
                     onPress={() =>
                       handleSend(
-                        "Translate this sentence to spanish: 'I love you'"
+                        "Translate this sentence to spanish: 'I love you'",
+                        setMessages,
+                        setMessage,
+                        setHeight
                       )
                     }
                   >
@@ -437,7 +417,9 @@ const HomeScreen = () => {
 
           {/* Send Button */}
           <TouchableOpacity
-            onPress={() => handleSend(message)}
+            onPress={() =>
+              handleSend(message, setMessages, setMessage, setHeight)
+            }
             disabled={!message.trim()} // Disable button if the input is empty
           >
             <Send size={25} color={message.trim() ? "#0084ff" : "black"} />
@@ -451,7 +433,9 @@ const HomeScreen = () => {
         onClose={() => setIsSidebarVisible(false)}
         chats={chats}
         onStartNewChat={() => handleCreateNewChat(chats)}
-        onSelectChat={handleChatSelect}
+        onSelectChat={(chatsId) =>
+          handleChatSelect(chatsId, setIsSidebarVisible(false))
+        }
       />
     </View>
   );

@@ -1,6 +1,3 @@
-// api/index.ts
-import { useState } from "react";
-
 // base URL
 const API_URL = process.env.API_URL || "http://192.168.12.76:3000";
 
