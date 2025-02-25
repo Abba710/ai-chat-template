@@ -1,12 +1,6 @@
 import { sendMessageToAI } from "@/services/api";
 import { Dispatch, SetStateAction } from "react";
-import { MessageType } from "@/types/chattypes";
-
-interface MessageInterface {
-  text: string;
-  time: Date;
-  isAi: boolean;
-}
+import { MessageType } from "@/types/app_types";
 
 interface AIResponse {
   response: string;

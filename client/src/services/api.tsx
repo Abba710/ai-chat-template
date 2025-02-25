@@ -24,7 +24,7 @@ const request = async (endpoint: string, options: RequestInit = {}) => {
     }
 
     return response.json();
-  } catch (error) {
+  } catch (error: any) {
     throw error;
   } finally {
     clearTimeout(timeoutId);
@@ -41,8 +41,7 @@ export const sendMessageToAI = async (text: string) => {
 
     // return response
     return response;
-  } catch (error) {
-    console.error("Error sending message:", error);
-    throw error;
+  } catch (error: any) {
+    return null;
   }
 };
