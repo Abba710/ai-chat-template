@@ -20,9 +20,7 @@ const HomeScreen = () => {
   const [message, setMessage] = useState(""); // input state
   const [isSidebarVisible, setIsSidebarVisible] = useState(false); // sidebar state
   const [chats, setChats] = useState<ChatInterface[]>([]); // chats list
-  const [selectedChat, setSelectedChat] = useState<ChatInterface | null>(null); // select chat
   const [messages, setMessages] = useState<MessageType[]>(exampleMessages); // messages state
-  const [backPressed, setBackPressed] = useState(false); // Mobile back button state
   const [height, setHeight] = useState(40); // Initial height
 
   return (
