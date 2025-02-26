@@ -26,6 +26,7 @@ export interface ChatInterface {
   id: string;
   title: string;
   lastMessage?: string;
+  messages: MessageType[];
 }
 
 // header types

@@ -30,9 +30,13 @@ const fetchAIResponse = async (message: string): Promise<string> => {
   }
 };
 // chat select fucntion
-export const handleChatSelect = (chatId: string, setIsSidebarVisible) => {
-  // To do: Write a chat selection function
-  setIsSidebarVisible(false);
+export const handleChatSelect = (
+  chatId: string,
+  setIsSidebarVisible: Dispatch<SetStateAction<boolean>>,
+  setSelectedChatId: Dispatch<SetStateAction<string | null>>
+) => {
+  setSelectedChatId(chatId); // Устанавливаем выбранный чат
+  setIsSidebarVisible(false); // Закрываем панель
 };
 
 //create new chat function
@@ -40,7 +44,11 @@ export const handleCreateNewChat = (
   chats: ChatInterface[],
   setChats: Dispatch<SetStateAction<ChatInterface[]>>
 ) => {
-  const newChat: ChatInterface = { id: `${Date.now()}`, title: "New Chat" };
+  const newChat: ChatInterface = {
+    id: `${Date.now()}`,
+    title: `Chat ${chats.length + 1}`,
+    messages: [],
+  };
   setChats([...chats, newChat]);
 };
 

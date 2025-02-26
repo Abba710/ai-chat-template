@@ -12,15 +12,16 @@ import {
   handleSend,
 } from "@/utils/chatHandlers";
 
-const exampleMessages: MessageType[] = [];
-
 const HomeScreen = () => {
   // states
   const [message, setMessage] = useState(""); // input state
   const [isSidebarVisible, setIsSidebarVisible] = useState(false); // sidebar state
   const [chats, setChats] = useState<ChatInterface[]>([]); // chats list
-  const [messages, setMessages] = useState<MessageType[]>(exampleMessages); // messages state
+  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<MessageType[]>([]); // messages state
   const [height, setHeight] = useState(40); // Initial height
+
+  const selectedChat = chats.find((chat) => chat.id === selectedChatId);
 
   return (
     <View className="flex w-full h-full bg-white sm:w-screen sm:h-screen">
@@ -31,8 +32,10 @@ const HomeScreen = () => {
 
       {/* MAIN */}
       <View className="flex h-screen w-screen">
-        {/* Tips - displayed if there are no messages */}
-        {messages.length === 0 && (
+        {/* Messages - displayed if there are messages */}
+        {selectedChat ? (
+          <MessageList messagesList={selectedChat.messages} />
+        ) : (
           <MessageTips
             changeHeight={setHeight}
             message={message}
@@ -40,11 +43,6 @@ const HomeScreen = () => {
             changeMessages={setMessages}
             childHandleSend={handleSend}
           ></MessageTips>
-        )}
-
-        {/* Messages - displayed if there are messages */}
-        {messages.length > 0 && (
-          <MessageList messagesList={messages}></MessageList>
         )}
       </View>
 
@@ -66,8 +64,8 @@ const HomeScreen = () => {
         onClose={() => setIsSidebarVisible(false)}
         chats={chats}
         onStartNewChat={() => handleCreateNewChat(chats, setChats)}
-        onSelectChat={(chatsId) =>
-          handleChatSelect(chatsId, setIsSidebarVisible(false))
+        onSelectChat={(chatId: string) =>
+          handleChatSelect(chatId, setIsSidebarVisible, setSelectedChatId)
         }
       />
     </View>

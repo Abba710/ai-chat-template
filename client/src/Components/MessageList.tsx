@@ -1,10 +1,10 @@
 import { useRef } from "react";
 import { View, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { MessageType } from "@/types/app_types";
+import { ChatInterface } from "@/types/app_types";
 
 interface MessageListProps {
-  messagesList: MessageType[];
+  messagesList: ChatInterface["messages"];
 }
 
 export const MessageList: React.FC<MessageListProps> = ({ messagesList }) => {
