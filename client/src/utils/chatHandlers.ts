@@ -1,6 +1,6 @@
 import { sendMessageToAI } from "@/services/api";
 import { Dispatch, SetStateAction } from "react";
-import { MessageType } from "@/types/app_types";
+import { ChatInterface, MessageType } from "@/types/app_types";
 
 interface AIResponse {
   response: string;
@@ -29,14 +29,19 @@ const fetchAIResponse = async (message: string): Promise<string> => {
     throw new Error("Failed to get a response. Please try again.");
   }
 };
-
+// chat select fucntion
 export const handleChatSelect = (chatId: string, setIsSidebarVisible) => {
   // To do: Write a chat selection function
   setIsSidebarVisible(false);
 };
 
-export const handleCreateNewChat = (chats) => {
-  //To do: Write the function of creating new chats
+//create new chat function
+export const handleCreateNewChat = (
+  chats: ChatInterface[],
+  setChats: Dispatch<SetStateAction<ChatInterface[]>>
+) => {
+  const newChat: ChatInterface = { id: `${Date.now()}`, title: "New Chat" };
+  setChats([...chats, newChat]);
 };
 
 // message dispatcher

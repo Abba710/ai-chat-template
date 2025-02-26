@@ -7,7 +7,7 @@ export type MessageType = {
   isAi: boolean;
 };
 
-//
+// chat types
 export interface ChatMessagesProps {
   height?: number;
   changeHeight: (newHeight: number) => void;
@@ -28,6 +28,15 @@ export interface ChatInterface {
   lastMessage?: string;
 }
 
+// header types
 export interface HeaderProps {
   OpenSidebar: () => void;
+}
+
+export interface SidebarProps {
+  isVisible: boolean;
+  onClose: () => void;
+  chats: ChatInterface[];
+  onSelectChat: (chatId: string) => void;
+  onStartNewChat: () => void;
 }

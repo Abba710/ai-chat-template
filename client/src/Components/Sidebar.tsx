@@ -1,20 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, View, Text, TouchableOpacity, FlatList } from "react-native";
 import { Menu, Plus } from "lucide-react-native";
-
-interface Chat {
-  id: string;
-  title: string;
-  lastMessage?: string;
-}
-
-interface SidebarProps {
-  isVisible: boolean;
-  onClose: () => void;
-  chats: Chat[];
-  onSelectChat: (chatId: string) => void;
-  onStartNewChat: () => void;
-}
+import { SidebarProps } from "@/types/app_types";
 
 const Sidebar: React.FC<SidebarProps> = ({
   isVisible,

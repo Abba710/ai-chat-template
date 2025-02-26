@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { View } from "react-native";
+import { ChatInterface, MessageType } from "@/types/app_types";
 import Sidebar from "@/Components/Sidebar";
 import { HeaderComponent } from "@/Components/HeaderComponent";
-import { ChatInterface, MessageType } from "@/types/app_types";
+import { MessageList } from "@/Components/MessageList";
+import { ChatInput } from "@/Components/input";
+import { MessageTips } from "@/Components/MessageTips";
 import {
   handleChatSelect,
   handleCreateNewChat,
   handleSend,
 } from "@/utils/chatHandlers";
-import { MessageList } from "@/Components/MessageList";
-
-import { ChatInput } from "@/Components/input";
-import { MessageTips } from "@/Components/MessageTips";
 
 const exampleMessages: MessageType[] = [];
 
@@ -66,7 +65,7 @@ const HomeScreen = () => {
         isVisible={isSidebarVisible}
         onClose={() => setIsSidebarVisible(false)}
         chats={chats}
-        onStartNewChat={() => handleCreateNewChat(chats)}
+        onStartNewChat={() => handleCreateNewChat(chats, setChats)}
         onSelectChat={(chatsId) =>
           handleChatSelect(chatsId, setIsSidebarVisible(false))
         }
