@@ -23,39 +23,37 @@ export const ChatInput: React.FC<ChatMessagesProps> = ({
   changeMessage,
   changeMessages,
   childHandleSend,
+  selectedChatId,
+  setChats,
 }) => {
   const handleKeyPress = (
     event: NativeSyntheticEvent<TextInputKeyPressEventData> | KeyboardEvent
   ) => {
     if (Platform.OS === "web") {
-      // For web platform
       const webEvent = event as KeyboardEvent;
       if (webEvent.key === "Enter" && !webEvent.shiftKey) {
-        webEvent.preventDefault(); // Prevent adding a new line
-        childHandleSend(message, changeMessages, changeMessage, changeHeight); // Send the message when Enter is pressed
+        webEvent.preventDefault();
+        childHandleSend(
+          message,
+          setChats,
+          changeMessage,
+          changeHeight,
+          selectedChatId
+        );
       }
     }
   };
 
-  // Processor of changes in the size of the contents
   const handleContentSizeChange = useCallback(
     (e: any) => {
       if (Platform.OS === "web") {
-        // Web-specific logic
         const { height: contentHeight } = e.nativeEvent.contentSize;
-
-        // Dynamically adjust height, but do not exceed maxHeight
         const newHeight = Math.min(contentHeight, MAX_HEIGHT);
-
-        // Update height only if it has changed
         if (newHeight !== height) {
           changeHeight(newHeight);
         }
       } else {
-        // Native (Android/iOS) logic remains unchanged
         const { height: contentHeight } = e.nativeEvent.contentSize;
-
-        // Dynamically adjust height within min and max limits
         if (contentHeight >= MIN_HEIGHT && contentHeight <= MAX_HEIGHT) {
           changeHeight(contentHeight);
         } else if (contentHeight > MAX_HEIGHT) {
@@ -63,12 +61,11 @@ export const ChatInput: React.FC<ChatMessagesProps> = ({
         }
       }
     },
-    [height, Platform.OS] // Add height and platform as dependencies
+    [height, Platform.OS]
   );
 
   return (
     <View className="flex-row items-center bg-white rounded-3xl px-4 py-3 shadow-xl shadow-black shadow-opacity-100">
-      {/* TextInput with dynamic height adjustment */}
       <TextInput
         className="text-gray-600 w-full flex-1 border-none outline-none"
         placeholder="Type your message..."
@@ -76,12 +73,9 @@ export const ChatInput: React.FC<ChatMessagesProps> = ({
         value={message}
         onChangeText={(text) => {
           changeMessage(text);
-
-          // Handle deletion explicitly on web
           if (Platform.OS === "web" && text.length < message.length) {
             const newHeight = Math.max(
               MIN_HEIGHT,
-              // check Is there a height?
               height !== undefined ? height : -LINE_HEIGHT
             );
             changeHeight(newHeight);
@@ -90,33 +84,35 @@ export const ChatInput: React.FC<ChatMessagesProps> = ({
         onKeyPress={handleKeyPress}
         multiline
         maxLength={MAX_LENGTH}
-        onContentSizeChange={handleContentSizeChange} // Handles dynamic resizing
+        onContentSizeChange={handleContentSizeChange}
         style={{
-          height, // Dynamic height based on content
+          height,
           paddingTop: 10,
           paddingBottom: 10,
-          textAlignVertical: "top", // Align text to the top for better readability
-          borderWidth: 0, // Remove border on focus
+          textAlignVertical: "top",
+          borderWidth: 0,
           ...Platform.select({
             web: {
-              whiteSpace: "pre-wrap", // Ensure proper line wrapping on web
+              whiteSpace: "pre-wrap",
               wordWrap: "break-word",
             },
           }),
         }}
       />
-
-      {/* Microphone Icon */}
       <TouchableOpacity>
         <Mic size={25} color="black" />
       </TouchableOpacity>
-
-      {/* Send Button */}
       <TouchableOpacity
         onPress={() =>
-          childHandleSend(message, changeMessages, changeMessage, changeHeight)
+          childHandleSend(
+            message,
+            setChats, // Исправлено: заменил changeMessages на setChats
+            changeMessage,
+            changeHeight,
+            selectedChatId // Добавлен пятый аргумент
+          )
         }
-        disabled={!message.trim()} // Disable button if the input is empty
+        disabled={!message.trim()}
       >
         <Send size={25} color={message.trim() ? "#0084ff" : "black"} />
       </TouchableOpacity>

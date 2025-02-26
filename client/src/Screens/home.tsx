@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View } from "react-native";
-import { ChatInterface, MessageType } from "@/types/app_types";
+import { ChatInterface } from "@/types/app_types";
 import Sidebar from "@/Components/Sidebar";
 import { HeaderComponent } from "@/Components/HeaderComponent";
 import { MessageList } from "@/Components/MessageList";
@@ -13,36 +13,61 @@ import {
 } from "@/utils/chatHandlers";
 
 const HomeScreen = () => {
-  // states
-  const [message, setMessage] = useState(""); // input state
-  const [isSidebarVisible, setIsSidebarVisible] = useState(false); // sidebar state
-  const [chats, setChats] = useState<ChatInterface[]>([]); // chats list
-  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<MessageType[]>([]); // messages state
-  const [height, setHeight] = useState(40); // Initial height
+  // State declarations
+  const [message, setMessage] = useState(""); // Input state
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false); // Sidebar visibility state
+  const [chats, setChats] = useState<ChatInterface[]>([]); // Chats list state
+  const [selectedChatId, setSelectedChatId] = useState<string | null>(null); // Selected chat ID state
+  const [height, setHeight] = useState(40); // Input height state
 
-  const selectedChat = chats.find((chat) => chat.id === selectedChatId);
+  const selectedChat = chats.find((chat) => chat.id === selectedChatId); // Find selected chat
+  const hasMessages = selectedChat && selectedChat.messages.length > 0; // Check if there are messages
+
+  // Ensure a chat is always selected (last chat or create new)
+  useEffect(() => {
+    if (chats.length > 0 && !selectedChatId) {
+      setSelectedChatId(chats[chats.length - 1].id); // Select the last chat
+    } else if (chats.length === 0) {
+      const newChatId = handleCreateNewChat(chats, setChats); // Create a new chat if none exist
+      setSelectedChatId(newChatId);
+    }
+  }, [chats, selectedChatId]);
 
   return (
     <View className="flex w-full h-full bg-white sm:w-screen sm:h-screen">
       {/* Header */}
-      <HeaderComponent
-        OpenSidebar={() => setIsSidebarVisible(true)}
-      ></HeaderComponent>
+      <HeaderComponent OpenSidebar={() => setIsSidebarVisible(true)} />
 
-      {/* MAIN */}
+      {/* Sidebar */}
+      <Sidebar
+        isVisible={isSidebarVisible}
+        onClose={() => setIsSidebarVisible(false)}
+        chats={chats}
+        onStartNewChat={() => {
+          const newChatId = handleCreateNewChat(chats, setChats); // Create new chat
+          setSelectedChatId(newChatId); // Focus on the new chat
+        }}
+        onSelectChat={(chatId: string) =>
+          handleChatSelect(chatId, setIsSidebarVisible, setSelectedChatId)
+        }
+      />
+
+      {/* Main Content */}
       <View className="flex h-screen w-screen">
-        {/* Messages - displayed if there are messages */}
-        {selectedChat ? (
+        {/* Display messages if available, otherwise show tips */}
+        {hasMessages ? (
           <MessageList messagesList={selectedChat.messages} />
         ) : (
           <MessageTips
+            height={height}
             changeHeight={setHeight}
             message={message}
             changeMessage={setMessage}
-            changeMessages={setMessages}
             childHandleSend={handleSend}
-          ></MessageTips>
+            selectedChatId={selectedChatId}
+            setChats={setChats}
+            setSelectedChatId={setSelectedChatId}
+          />
         )}
       </View>
 
@@ -53,21 +78,21 @@ const HomeScreen = () => {
           changeHeight={setHeight}
           message={message}
           changeMessage={setMessage}
-          changeMessages={setMessages}
+          changeMessages={(newMessages) => {
+            setChats(
+              chats.map((chat) =>
+                chat.id === selectedChatId
+                  ? { ...chat, messages: newMessages }
+                  : chat
+              )
+            );
+          }}
           childHandleSend={handleSend}
-        ></ChatInput>
+          selectedChatId={selectedChatId}
+          setChats={setChats}
+          setSelectedChatId={setSelectedChatId}
+        />
       </View>
-
-      {/* Sidebar */}
-      <Sidebar
-        isVisible={isSidebarVisible}
-        onClose={() => setIsSidebarVisible(false)}
-        chats={chats}
-        onStartNewChat={() => handleCreateNewChat(chats, setChats)}
-        onSelectChat={(chatId: string) =>
-          handleChatSelect(chatId, setIsSidebarVisible, setSelectedChatId)
-        }
-      />
     </View>
   );
 };

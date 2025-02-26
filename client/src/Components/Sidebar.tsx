@@ -58,7 +58,10 @@ const Sidebar: React.FC<SidebarProps> = ({
         </View>
         {/* Start New Chat Button - More Harmonious */}
         <TouchableOpacity
-          onPress={onStartNewChat}
+          onPress={() => {
+            onStartNewChat();
+            onClose();
+          }}
           className="w-9 h-9 rounded-full bg-gray-100 items-center justify-center hover:bg-gray-200 transition-all duration-200"
         >
           <Plus size={20} color="#6b7280" />

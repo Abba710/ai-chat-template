@@ -1,27 +1,14 @@
+// app_types.tsx
 import { Dispatch, SetStateAction } from "react";
 
-// Main messages types
+// Main messages type
 export type MessageType = {
   text: string;
   time: Date;
   isAi: boolean;
 };
 
-// chat types
-export interface ChatMessagesProps {
-  height?: number;
-  changeHeight: (newHeight: number) => void;
-  message: string;
-  changeMessage: (newMessage: string) => void;
-  changeMessages: Dispatch<SetStateAction<MessageType[]>>;
-  childHandleSend: (
-    message,
-    changeMessages,
-    changeMessage,
-    changeHeight
-  ) => void;
-}
-
+// Chat interface with messages
 export interface ChatInterface {
   id: string;
   title: string;
@@ -29,11 +16,32 @@ export interface ChatInterface {
   messages: MessageType[];
 }
 
-// header types
+// Props for chat-related components
+export interface ChatMessagesProps {
+  height: number;
+  changeHeight: Dispatch<SetStateAction<number>>;
+  message: string;
+  changeMessage: Dispatch<SetStateAction<string>>;
+  changeMessages?: (messages: MessageType[]) => void; // Made optional with '?'
+  childHandleSend: (
+    message: string,
+    setChats: Dispatch<SetStateAction<ChatInterface[]>>,
+    setMessage: Dispatch<SetStateAction<string>>,
+    setHeight: Dispatch<SetStateAction<number>>,
+    selectedChatId: string | null,
+    setSelectedChatId: Dispatch<SetStateAction<string | null>>
+  ) => void;
+  selectedChatId: string | null;
+  setChats: Dispatch<SetStateAction<ChatInterface[]>>;
+  setSelectedChatId: Dispatch<SetStateAction<string | null>>;
+}
+
+// Header props
 export interface HeaderProps {
   OpenSidebar: () => void;
 }
 
+// Sidebar props
 export interface SidebarProps {
   isVisible: boolean;
   onClose: () => void;

@@ -1,3 +1,4 @@
+// MessageTips.tsx
 import React from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -7,8 +8,10 @@ import { Edit3, Languages, SearchIcon } from "lucide-react-native";
 export const MessageTips: React.FC<ChatMessagesProps> = ({
   changeHeight,
   changeMessage,
-  changeMessages,
   childHandleSend,
+  selectedChatId,
+  setChats,
+  setSelectedChatId,
 }) => {
   return (
     <View className="flex h-screen">
@@ -31,9 +34,11 @@ export const MessageTips: React.FC<ChatMessagesProps> = ({
               onPress={() =>
                 childHandleSend(
                   "Explain Quantum physics",
-                  changeMessages,
+                  setChats,
                   changeMessage,
-                  changeHeight
+                  changeHeight,
+                  selectedChatId,
+                  setSelectedChatId
                 )
               }
             >
@@ -46,9 +51,11 @@ export const MessageTips: React.FC<ChatMessagesProps> = ({
               onPress={() =>
                 childHandleSend(
                   "What are wormholes explain like i am 5",
-                  changeMessages,
+                  setChats,
                   changeMessage,
-                  changeHeight
+                  changeHeight,
+                  selectedChatId,
+                  setSelectedChatId
                 )
               }
             >
@@ -72,10 +79,12 @@ export const MessageTips: React.FC<ChatMessagesProps> = ({
               className="bg-gray-50 p-4 rounded-3xl"
               onPress={() =>
                 childHandleSend(
-                  "What are wormholes explain like i am 5",
-                  changeMessages,
+                  "Write a tweet about global warming",
+                  setChats,
                   changeMessage,
-                  changeHeight
+                  changeHeight,
+                  selectedChatId,
+                  setSelectedChatId
                 )
               }
             >
@@ -88,9 +97,11 @@ export const MessageTips: React.FC<ChatMessagesProps> = ({
               onPress={() =>
                 childHandleSend(
                   "Write a poem about flower and love",
-                  changeMessages,
+                  setChats,
                   changeMessage,
-                  changeHeight
+                  changeHeight,
+                  selectedChatId,
+                  setSelectedChatId
                 )
               }
             >
@@ -103,9 +114,11 @@ export const MessageTips: React.FC<ChatMessagesProps> = ({
               onPress={() =>
                 childHandleSend(
                   "Write a rap song lyrics about",
-                  changeMessages,
+                  setChats,
                   changeMessage,
-                  changeHeight
+                  changeHeight,
+                  selectedChatId,
+                  setSelectedChatId
                 )
               }
             >
@@ -130,9 +143,11 @@ export const MessageTips: React.FC<ChatMessagesProps> = ({
               onPress={() =>
                 childHandleSend(
                   `How do you say "how are you" in korean?`,
-                  changeMessages,
+                  setChats,
                   changeMessage,
-                  changeHeight
+                  changeHeight,
+                  selectedChatId,
+                  setSelectedChatId
                 )
               }
             >
@@ -145,9 +160,11 @@ export const MessageTips: React.FC<ChatMessagesProps> = ({
               onPress={() =>
                 childHandleSend(
                   `Translate this sentence to spanish: 'I love you'`,
-                  changeMessages,
+                  setChats,
                   changeMessage,
-                  changeHeight
+                  changeHeight,
+                  selectedChatId,
+                  setSelectedChatId
                 )
               }
             >
