@@ -78,11 +78,11 @@ const Sidebar: React.FC<SidebarProps> = ({
             className="p-3 mx-2 my-1 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-200 transition-all duration-200"
           >
             <Text className="text-base font-medium text-gray-800">
-              {item.title || "Untitled"}
+              {item.title || "Chat"}
             </Text>
             <Text className="text-sm text-gray-500 mt-1 line-clamp-1">
-              {item.lastMessage
-                ? item.lastMessage.slice(0, 30)
+              {item.messages && item.messages.length > 0
+                ? item.messages[item.messages.length - 1].text.slice(0, 30)
                 : "No messages yet"}
             </Text>
           </TouchableOpacity>

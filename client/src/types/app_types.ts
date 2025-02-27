@@ -12,7 +12,6 @@ export type MessageType = {
 export interface ChatInterface {
   id: string;
   title: string;
-  lastMessage?: string;
   messages: MessageType[];
 }
 

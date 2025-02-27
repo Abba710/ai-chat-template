@@ -37,6 +37,7 @@ export const HeaderComponent: React.FC<HeaderProps> = ({ OpenSidebar }) => {
         </View>
       </View>
       <View className="flex-row gap-4 mr-[15px]">
+        {/* To do: Implement the AI ​​call */}
         <TouchableOpacity>
           <Image
             source={callIcon}
@@ -44,6 +45,7 @@ export const HeaderComponent: React.FC<HeaderProps> = ({ OpenSidebar }) => {
           />
         </TouchableOpacity>
         <TouchableOpacity>
+          {/* To do: Implement the AI ​video​call */}
           <Image
             source={videoIcon}
             className="w-[24px] h-[24px] sm:h-[48px] sm:w-[48px]"
