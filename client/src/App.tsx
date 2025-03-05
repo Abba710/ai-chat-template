@@ -1,6 +1,7 @@
-import { BackHandler, ToastAndroid } from "react-native";
-import LoadScreen from "./Screens/load";
-import HomeScreen from "./Screens/home";
+import { BackHandler, ToastAndroid, StatusBar } from "react-native";
+import LoadScreen from "@/Screens/load";
+import HomeScreen from "@/Screens/home";
+import AuthScreen from "@/Screens/auth";
 import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -44,11 +45,13 @@ export default function App() {
 
   return (
     <NavigationContainer>
+      <StatusBar></StatusBar>
       <Stack.Navigator
         initialRouteName="LoadScreen"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="LoadScreen" component={LoadScreen} />
+        <Stack.Screen name="Auth" component={AuthScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>

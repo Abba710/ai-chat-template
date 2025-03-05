@@ -1,14 +1,9 @@
 {
   "compilerOptions": {
-    "types": [
-      "nativewind/types"
-    ],
+    "types": ["nativewind/types"],
     "target": "esnext",
     "module": "esnext",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "jsx": "react-native",
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -21,9 +16,8 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"],
+      "@env": ["./env.d.ts"]
     },
     "allowJs": true,
     "noImplicitAny": false,
@@ -33,16 +27,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "include": [
-    "src/**/*",
-    "nativewind-env.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build",
-    "**/*.spec.ts",
-    "**/*.test.ts"
-  ],
+  "include": ["src/**/*", "nativewind-env.d.ts"],
+  "exclude": ["node_modules", "dist", "build", "**/*.spec.ts", "**/*.test.ts"],
   "extends": "expo/tsconfig.base"
 }

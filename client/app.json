@@ -1,6 +1,7 @@
 {
   "expo": {
-    "name": "client",
+    "scheme": ["mobiletemplate"],
+    "name": "Mobile Template",
     "slug": "client",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,11 +20,28 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.mobileTemplate.client"
     },
     "web": {
       "bundler": "metro",
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "cb7af045-9302-483f-8079-36d49bd1f749"
+      }
+    },
+    "plugins": [
+      "expo-secure-store",
+      "@react-native-google-signin/google-signin"
+    ],
+    "owner": "abba710",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/cb7af045-9302-483f-8079-36d49bd1f749"
     }
   }
 }

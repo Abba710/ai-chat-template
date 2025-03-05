@@ -15,12 +15,12 @@ const LoadScreen = () => {
     const navigation = useNavigation<LoadScreenNavigationProp>();
     useEffect(() => {
       setTimeout(() => {
-        navigation.navigate("Home");
+        navigation.navigate("Auth");
       }, 3000);
     }, []);
   } else {
     const navigation = useNavigation<LoadScreenNavigationProp>();
-    navigation.navigate("Home");
+    navigation.navigate("Auth");
   }
 
   return (
