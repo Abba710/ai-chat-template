@@ -45,7 +45,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <StatusBar></StatusBar>
+      <StatusBar backgroundColor="#2e332e" />
       <Stack.Navigator
         initialRouteName="LoadScreen"
         screenOptions={{ headerShown: false }}

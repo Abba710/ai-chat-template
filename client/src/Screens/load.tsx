@@ -26,8 +26,8 @@ const LoadScreen = () => {
   return (
     <View className="w-screen h-full py-[237px] bg-[#2e332e] justify-center items-center gap-2.5 inline-flex overflow-hidden">
       <Image
-        source={require("../img/ai/ai_logo.jpg")}
-        className="w-[337px] h-[337px] rounded-[256px]"
+        source={require("../img/ai/ai_logo.png")}
+        className="w-[337px] h-[337px]"
       />
     </View>
   );
