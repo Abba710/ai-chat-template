@@ -5,7 +5,7 @@ import { forbidden } from '@hapi/boom'
 import GoogleLogin from '@/validators/GoogleLogin'
 import getGoogleUser from '@/helpers/getGoogleUser'
 
-@Controller('/login')
+@Controller('/auth')
 export default class LoginController {
   @Post('/google')
   async google(@Body({ required: true }) { accessToken }: GoogleLogin) {

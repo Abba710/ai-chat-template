@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { View, Image, Text, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import { View, Image, Text, TouchableOpacity, Alert } from "react-native";
 import { WEB_ID, ANDROID_ID } from "@env";
 import * as AuthSession from "expo-auth-session";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
+import { googleAuth } from "@/services/api";
 
 // Ensure the authentication session is properly handled in the web environment
 WebBrowser.maybeCompleteAuthSession();
 
 // Define the redirect URI for authentication
-const redirectUri = AuthSession.makeRedirectUri();
+const redirectUri = AuthSession.makeRedirectUri({});
+Alert.alert("Redirect URI", redirectUri);
 
 const Auth = () => {
-  const [userInfo, setUserInfo] = useState(null);
-
   // Initialize Google authentication request
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: ANDROID_ID,
@@ -37,37 +37,14 @@ const Auth = () => {
   }, [response]);
 
   // Fetch user information from Google API
-  async function fetchUserInfo(token) {
-    if (!token) return;
+  async function fetchUserInfo(accessToken) {
+    if (!accessToken) return;
+
     try {
-      const response = await fetch(
-        "https://www.googleapis.com/userinfo/v2/me",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch user data: ${response.status}`);
-      }
-
-      const user = await response.json();
-      console.log(user, token);
-
-      // {
-      //  "id": "123456789",
-      //  "email": "user@example.com",
-      //  "verified_email": true,
-      //  "name": "John Doe",
-      //  "given_name": "John",
-      //  "family_name": "Doe",
-      //  "picture": "https://lh3.googleusercontent.com/a-/A1234567890",
-      //  "locale": "en"
-      //}
-
-      setUserInfo(user);
+      console.log("Access Token:", accessToken);
+      googleAuth(accessToken); // send to backend
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      console.error("Error handling token:", error);
     }
   }
 
@@ -93,7 +70,7 @@ const Auth = () => {
           />
         </View>
         <Text className="text-black/50 text-xl font-medium font-roboto">
-          Continue with Google
+          Continue Google
         </Text>
       </TouchableOpacity>
     </View>

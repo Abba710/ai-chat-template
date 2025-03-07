@@ -1,8 +1,9 @@
 import { View, Image, Platform } from "react-native";
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../App";
+import { getToken } from "@/services/securestore";
 
 type LoadScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -10,27 +11,53 @@ type LoadScreenNavigationProp = StackNavigationProp<
 >;
 
 const LoadScreen = () => {
-  const isMobile = Platform.OS === "ios" || Platform.OS === "android";
-  if (isMobile) {
-    const navigation = useNavigation<LoadScreenNavigationProp>();
-    useEffect(() => {
-      setTimeout(() => {
-        navigation.navigate("Auth");
+  const [token, setToken] = useState<string | null | undefined>(undefined);
+  const navigation = useNavigation<LoadScreenNavigationProp>();
+  const isNative = Platform.OS !== "web"; // Check if running on a native platform
+
+  // Function to retrieve the token from storage
+  const fetchToken = useCallback(async () => {
+    const storedToken = await getToken();
+    setToken(storedToken);
+
+    // On web, navigate immediately based on token availability
+    if (!isNative) {
+      navigation.replace(storedToken ? "Home" : "Auth");
+    }
+  }, [navigation, isNative]);
+
+  // Fetch the token on component mount
+  useEffect(() => {
+    fetchToken();
+  }, [fetchToken]);
+
+  // On mobile, delay navigation by 3 seconds for a loading effect
+  useEffect(() => {
+    if (isNative && token !== undefined) {
+      const timeout = setTimeout(() => {
+        navigation.replace(token ? "Home" : "Auth");
       }, 3000);
-    }, []);
-  } else {
-    const navigation = useNavigation<LoadScreenNavigationProp>();
-    navigation.navigate("Auth");
+
+      return () => clearTimeout(timeout);
+    }
+  }, [token, navigation, isNative]);
+
+  // On web, do not render anything (redirect happens instantly)
+  if (!isNative) return null;
+
+  // Show loading screen while checking the token
+  if (token === undefined) {
+    return (
+      <View className="w-screen h-full bg-[#2e332e] justify-center items-center">
+        <Image
+          source={require("../img/ai/ai_logo.png")}
+          className="w-[200px] h-[200px]"
+        />
+      </View>
+    );
   }
 
-  return (
-    <View className="w-screen h-full py-[237px] bg-[#2e332e] justify-center items-center gap-2.5 inline-flex overflow-hidden">
-      <Image
-        source={require("../img/ai/ai_logo.png")}
-        className="w-[337px] h-[337px]"
-      />
-    </View>
-  );
+  return null;
 };
 
 export default LoadScreen;
