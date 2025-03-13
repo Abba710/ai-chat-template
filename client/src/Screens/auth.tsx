@@ -24,7 +24,6 @@ const Auth = () => {
   // Handle authentication response
   useEffect(() => {
     if (response?.type === "success") {
-      WebBrowser.dismissBrowser();
       const { authentication } = response;
       if (authentication?.accessToken) {
         fetchUserInfo(authentication.accessToken);

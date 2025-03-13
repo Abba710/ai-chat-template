@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, View, Text, TouchableOpacity, FlatList } from "react-native";
-import { Menu, Plus } from "lucide-react-native";
+import { Menu, Plus, LogOut } from "lucide-react-native";
 import { SidebarProps } from "@/types/app_types";
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -27,7 +27,6 @@ const Sidebar: React.FC<SidebarProps> = ({
       }),
     ]).start();
   }, [isVisible]);
-
   return (
     <Animated.View
       style={{
@@ -90,6 +89,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         contentContainerStyle={{ paddingVertical: 8 }}
         showsVerticalScrollIndicator={false}
       />
+      <View className="mt-auto p-4">
+        <TouchableOpacity className="flex-row items-center gap-2 p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all duration-200">
+          <LogOut size={24} color="black" />
+          <Text className="text-black text-lg font-medium">Log out</Text>
+        </TouchableOpacity>
+      </View>
     </Animated.View>
   );
 };
